@@ -9,6 +9,7 @@
 -- - absence of duplicates
 -- - correct structure of fact table
 -- - consistency between fact and dimension tables
+-- - completeness of country-region mapping
 --
 -- Useful for:
 -- - debugging ETL processes
@@ -39,6 +40,26 @@ SELECT
 FROM dim_age
 GROUP BY age_range
 HAVING cnt > 1;
+
+
+-- Validate that all countries have a valid region
+
+SELECT 
+    country, 
+    region
+FROM dim_country
+WHERE region IS NULL
+   OR region = 'Unknown';
+
+
+-- Validate regional distribution of countries
+
+SELECT 
+    region, 
+    COUNT(*) AS countries
+FROM dim_country
+GROUP BY region
+ORDER BY region;
 
 
 -- =====================================================
